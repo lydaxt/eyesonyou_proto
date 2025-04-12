@@ -1,0 +1,1306 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["GridMaterial", "Material", "RippleMaterial", "ProximityMaterial", "TestPlane"]
+    def Material "GridMaterial"
+    {
+        token outputs:mtlx:surface.connect = </Root/GridMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (768.96094, 74.94922)
+        float2 ui:nodegraph:realitykit:subgraphOutputs:size = (181.5, 99)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 125
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor.connect = </Root/GridMaterial/IfEqual.outputs:out>
+            float inputs:metallic
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (567.9883, 5.5546875)
+            float2 ui:nodegraph:node:size = (148.5, 199)
+            int ui:nodegraph:node:stackingOrder = 129
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:diffuseColor"]
+        }
+
+        def Shader "Position"
+        {
+            uniform token info:id = "ND_position_vector3"
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-526.6211, -152.51953)
+            float2 ui:nodegraph:node:size = (133.5, 40)
+            int ui:nodegraph:node:stackingOrder = 17
+        }
+
+        def Shader "Separate3"
+        {
+            uniform token info:id = "ND_separate3_vector3"
+            float3 inputs:in.connect = </Root/GridMaterial/Position.outputs:out>
+            float outputs:outx
+            float outputs:outy
+            float outputs:outz
+            float2 ui:nodegraph:node:pos = (-373.92188, -129.35156)
+            float2 ui:nodegraph:node:size = (115.5, 145)
+            int ui:nodegraph:node:stackingOrder = 19
+        }
+
+        def Shader "Modulo_Value"
+        {
+            uniform token info:id = "ND_constant_float"
+            float inputs:value = 0.1
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-528.6719, 28.78125)
+            float2 ui:nodegraph:node:size = (172, 53)
+            int ui:nodegraph:node:stackingOrder = 137
+        }
+
+        def Shader "If_Value"
+        {
+            uniform token info:id = "ND_constant_float"
+            float inputs:value = 0.09
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-524.23047, 101.53125)
+            float2 ui:nodegraph:node:size = (134, 53)
+            int ui:nodegraph:node:stackingOrder = 138
+        }
+
+        def Shader "Max"
+        {
+            uniform token info:id = "ND_max_float"
+            float inputs:in1.connect = </Root/GridMaterial/ScalarLine.outputs:DrawLine>
+            float inputs:in2.connect = </Root/GridMaterial/Max_1.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (97.82422, -67.55469)
+            float2 ui:nodegraph:node:size = (113, 40)
+            int ui:nodegraph:node:stackingOrder = 135
+        }
+
+        def NodeGraph "ScalarLine"
+        {
+            float inputs:IfLine = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-553.51953, 132.47266)
+                        float2 sizeInSubgraph = (102.5, 53)
+                        int stackingOrderInSubgraph = 107
+                    }
+                }
+            )
+            float inputs:IfLine.connect = </Root/GridMaterial/If_Value.outputs:out>
+            float inputs:ModuloValue = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-569.7422, 54.359375)
+                        float2 sizeInSubgraph = (148, 53)
+                        int stackingOrderInSubgraph = 104
+                    }
+                }
+            )
+            float inputs:ModuloValue.connect = </Root/GridMaterial/Modulo_Value.outputs:out>
+            float inputs:PositionScalar = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-571.3867, -21.273438)
+                        float2 sizeInSubgraph = (157, 53)
+                        int stackingOrderInSubgraph = 106
+                    }
+                }
+            )
+            float inputs:PositionScalar.connect = </Root/GridMaterial/Separate3.outputs:outx>
+            float outputs:DrawLine.connect = </Root/GridMaterial/ScalarLine/Ifgreater.outputs:out>
+            float2 ui:nodegraph:node:pos = (-161.60547, -122.72656)
+            float2 ui:nodegraph:node:size = (126, 145)
+            int ui:nodegraph:node:stackingOrder = 136
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (2.15625, 47.203125)
+            float2 ui:nodegraph:realitykit:subgraphOutputs:size = (147, 81)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 108
+
+            def Shader "Modulo"
+            {
+                uniform token info:id = "ND_modulo_float"
+                float inputs:in1.connect = </Root/GridMaterial/ScalarLine.inputs:PositionScalar>
+                float inputs:in2 = 1
+                float inputs:in2.connect = </Root/GridMaterial/ScalarLine.inputs:ModuloValue>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-365.54688, -3.53125)
+                float2 ui:nodegraph:node:size = (63, 38.5)
+                int ui:nodegraph:node:stackingOrder = 105
+            }
+
+            def Shader "Ifgreater"
+            {
+                uniform token info:id = "ND_ifgreater_float"
+                float inputs:in1 = 1
+                float inputs:in2
+                float inputs:value1.connect = </Root/GridMaterial/ScalarLine/Modulo.outputs:out>
+                float inputs:value2 = 0.01
+                float inputs:value2.connect = </Root/GridMaterial/ScalarLine.inputs:IfLine>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-216.94922, 10.2265625)
+                float2 ui:nodegraph:node:size = (109, 163)
+                int ui:nodegraph:node:stackingOrder = 106
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in1"]
+            }
+        }
+
+        def Shader "Max_1"
+        {
+            uniform token info:id = "ND_max_float"
+            float inputs:in1.connect = </Root/GridMaterial/ScalarLine_1.outputs:DrawLine>
+            float inputs:in2.connect = </Root/GridMaterial/ScalarLine_2.outputs:DrawLine>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (111.29297, 23.945312)
+            float2 ui:nodegraph:node:size = (121.5, 53)
+            int ui:nodegraph:node:stackingOrder = 134
+        }
+
+        def NodeGraph "ScalarLine_1"
+        {
+            float inputs:IfLine = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-553.51953, 132.47266)
+                        float2 sizeInSubgraph = (102.5, 53)
+                        int stackingOrderInSubgraph = 107
+                    }
+                }
+            )
+            float inputs:IfLine.connect = </Root/GridMaterial/If_Value.outputs:out>
+            float inputs:ModuloValue = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-569.7422, 54.359375)
+                        float2 sizeInSubgraph = (148, 53)
+                        int stackingOrderInSubgraph = 104
+                    }
+                }
+            )
+            float inputs:ModuloValue.connect = </Root/GridMaterial/Modulo_Value.outputs:out>
+            float inputs:PositionScalar = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-571.3867, -21.273438)
+                        float2 sizeInSubgraph = (157, 53)
+                        int stackingOrderInSubgraph = 106
+                    }
+                }
+            )
+            float inputs:PositionScalar.connect = </Root/GridMaterial/Separate3.outputs:outy>
+            float outputs:DrawLine.connect = </Root/GridMaterial/ScalarLine_1/Ifgreater.outputs:out>
+            float2 ui:nodegraph:node:pos = (-158.76562, 37.835938)
+            float2 ui:nodegraph:node:size = (129.5, 145)
+            int ui:nodegraph:node:stackingOrder = 118
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (2.15625, 47.203125)
+            float2 ui:nodegraph:realitykit:subgraphOutputs:size = (147, 81)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 108
+
+            def Shader "Modulo"
+            {
+                uniform token info:id = "ND_modulo_float"
+                float inputs:in1.connect = </Root/GridMaterial/ScalarLine_1.inputs:PositionScalar>
+                float inputs:in2 = 1
+                float inputs:in2.connect = </Root/GridMaterial/ScalarLine_1.inputs:ModuloValue>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-365.54688, -3.53125)
+                float2 ui:nodegraph:node:size = (63, 38.5)
+                int ui:nodegraph:node:stackingOrder = 105
+            }
+
+            def Shader "Ifgreater"
+            {
+                uniform token info:id = "ND_ifgreater_float"
+                float inputs:in1 = 1
+                float inputs:in2
+                float inputs:value1.connect = </Root/GridMaterial/ScalarLine_1/Modulo.outputs:out>
+                float inputs:value2 = 0.01
+                float inputs:value2.connect = </Root/GridMaterial/ScalarLine_1.inputs:IfLine>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-216.94922, 10.2265625)
+                float2 ui:nodegraph:node:size = (109, 163)
+                int ui:nodegraph:node:stackingOrder = 106
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in1"]
+            }
+        }
+
+        def NodeGraph "ScalarLine_2"
+        {
+            float inputs:IfLine = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-553.51953, 132.47266)
+                        float2 sizeInSubgraph = (102.5, 53)
+                        int stackingOrderInSubgraph = 107
+                    }
+                }
+            )
+            float inputs:IfLine.connect = </Root/GridMaterial/If_Value.outputs:out>
+            float inputs:ModuloValue = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-569.7422, 54.359375)
+                        float2 sizeInSubgraph = (148, 53)
+                        int stackingOrderInSubgraph = 104
+                    }
+                }
+            )
+            float inputs:ModuloValue.connect = </Root/GridMaterial/Modulo_Value.outputs:out>
+            float inputs:PositionScalar = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-571.3867, -21.273438)
+                        float2 sizeInSubgraph = (157, 53)
+                        int stackingOrderInSubgraph = 106
+                    }
+                }
+            )
+            float inputs:PositionScalar.connect = </Root/GridMaterial/Separate3.outputs:outz>
+            float outputs:DrawLine.connect = </Root/GridMaterial/ScalarLine_2/Ifgreater.outputs:out>
+            float2 ui:nodegraph:node:pos = (-159.17578, 196.78516)
+            float2 ui:nodegraph:node:size = (132.5, 145)
+            int ui:nodegraph:node:stackingOrder = 121
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (2.15625, 47.203125)
+            float2 ui:nodegraph:realitykit:subgraphOutputs:size = (147, 81)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 108
+
+            def Shader "Modulo"
+            {
+                uniform token info:id = "ND_modulo_float"
+                float inputs:in1.connect = </Root/GridMaterial/ScalarLine_2.inputs:PositionScalar>
+                float inputs:in2 = 1
+                float inputs:in2.connect = </Root/GridMaterial/ScalarLine_2.inputs:ModuloValue>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-365.54688, -3.53125)
+                float2 ui:nodegraph:node:size = (63, 38.5)
+                int ui:nodegraph:node:stackingOrder = 105
+            }
+
+            def Shader "Ifgreater"
+            {
+                uniform token info:id = "ND_ifgreater_float"
+                float inputs:in1 = 1
+                float inputs:in2
+                float inputs:value1.connect = </Root/GridMaterial/ScalarLine_2/Modulo.outputs:out>
+                float inputs:value2 = 0.01
+                float inputs:value2.connect = </Root/GridMaterial/ScalarLine_2.inputs:IfLine>
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-216.94922, 10.2265625)
+                float2 ui:nodegraph:node:size = (109, 163)
+                int ui:nodegraph:node:stackingOrder = 106
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in1"]
+            }
+        }
+
+        def Shader "IfEqual"
+        {
+            uniform token info:id = "ND_ifequal_color3"
+            color3f inputs:in1 = (0, 0, 0) (
+                colorSpace = "srgb_displayp3"
+            )
+            color3f inputs:in2 = (1, 1, 1) (
+                colorSpace = "srgb_displayp3"
+            )
+            float inputs:value1.connect = </Root/GridMaterial/Max.outputs:out>
+            float inputs:value2 = 1
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (284.1328, -26.410156)
+            float2 ui:nodegraph:node:size = (109, 163)
+            int ui:nodegraph:node:stackingOrder = 133
+        }
+    }
+
+    def Material "ProximityMaterial"
+    {
+        reorder nameChildren = ["ColorRangeMap_1", "PreviewSurface", "RippleGeometry", "GeometryModifier", "ProximityColor", "Convert", "Combine3", "Multiply", "Separate4", "Combine3_1", "Convert_1"]
+        color4f inputs:CustomColor = (1, 0.17291287, 0.18973657, 1) (
+            colorSpace = "srgb_displayp3"
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-619.32697, -148.10115)
+                    float2 sizeInSubgraph = (149.5, 53)
+                    int stackingOrderInSubgraph = 1992
+                }
+            }
+        )
+        bool inputs:Ripple = 0 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-356.9453, 168.51254)
+                    float2 sizeInSubgraph = (107, 53)
+                    int stackingOrderInSubgraph = 1714
+                }
+            }
+        )
+        bool inputs:UseCustomColor = 0 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-785.86255, -82.641594)
+                    float2 sizeInSubgraph = (173.5, 53)
+                    int stackingOrderInSubgraph = 1992
+                }
+            }
+        )
+        prepend token outputs:mtlx:surface.connect = </Root/ProximityMaterial/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex.connect = </Root/ProximityMaterial/GeometryModifier.outputs:out>
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (492.8789, 132.33984)
+        float2 ui:nodegraph:realitykit:subgraphOutputs:size = (181.5, 99)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 740
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            color3f inputs:diffuseColor.connect = </Root/ProximityMaterial/Combine3_1.outputs:out>
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:opacity.connect = </Root/ProximityMaterial/Separate4.outputs:outa>
+            float inputs:roughness
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (276.80078, 54.476562)
+            float2 ui:nodegraph:node:size = (148.5, 199)
+            int ui:nodegraph:node:stackingOrder = 1717
+        }
+
+        def NodeGraph "RippleGeometry"
+        {
+            float3 outputs:PositionOffset (
+                customData = {
+                    dictionary realitykit = {
+                        int stackingOrderInSubgraph = 888
+                    }
+                }
+            )
+            float3 outputs:PositionOffset.connect = </Root/ProximityMaterial/RippleGeometry/CrossProduct.outputs:out>
+            float2 ui:nodegraph:node:pos = (-81.903625, 284.54242)
+            float2 ui:nodegraph:node:size = (152.5, 81)
+            int ui:nodegraph:node:stackingOrder = 1714
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (225.9375, -77.62109)
+            float2 ui:nodegraph:realitykit:subgraphOutputs:size = (224.5, 81)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 890
+
+            def Shader "Normal"
+            {
+                uniform token info:id = "ND_normal_vector3"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-226.22266, 32.35547)
+                float2 ui:nodegraph:node:size = (128.5, 40)
+                int ui:nodegraph:node:stackingOrder = 888
+            }
+
+            def Shader "Divide"
+            {
+                uniform token info:id = "ND_divide_float"
+                float inputs:in1.connect = </Root/ProximityMaterial/RippleGeometry/Time_1.outputs:out>
+                float inputs:in2 = 4
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-812.33984, -165.98438)
+                float2 ui:nodegraph:node:size = (61.5, 36)
+                int ui:nodegraph:node:stackingOrder = 888
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in2"]
+            }
+
+            def Shader "Time_1"
+            {
+                uniform token info:id = "ND_time_float"
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-945.0156, -169.79688)
+                float2 ui:nodegraph:node:size = (122.5, 53)
+                int ui:nodegraph:node:stackingOrder = 888
+            }
+
+            def Shader "Noise3D"
+            {
+                uniform token info:id = "ND_noise3d_vector3FA"
+                float inputs:amplitude = 0.1
+                float inputs:amplitude.connect = None
+                float inputs:pivot.connect = None
+                float3 inputs:position.connect = </Root/ProximityMaterial/RippleGeometry/Add.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-289.60938, -103.86328)
+                float2 ui:nodegraph:node:size = (105, 145)
+                int ui:nodegraph:node:stackingOrder = 888
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:amplitude"]
+            }
+
+            def Shader "CrossProduct"
+            {
+                uniform token info:id = "ND_crossproduct_vector3"
+                float3 inputs:in1.connect = </Root/ProximityMaterial/RippleGeometry/Noise3D.outputs:out>
+                float3 inputs:in2.connect = </Root/ProximityMaterial/RippleGeometry/Normal.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-53.398438, -54.578125)
+                float2 ui:nodegraph:node:size = (168.5, 53)
+                int ui:nodegraph:node:stackingOrder = 888
+            }
+
+            def Shader "Position"
+            {
+                uniform token info:id = "ND_position_vector3"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-661.08594, -42.710938)
+                float2 ui:nodegraph:node:size = (133.5, 40)
+                int ui:nodegraph:node:stackingOrder = 888
+            }
+
+            def Shader "Combine3"
+            {
+                uniform token info:id = "ND_combine3_vector3"
+                float inputs:in1.connect = </Root/ProximityMaterial/RippleGeometry/Divide.outputs:out>
+                float inputs:in2.connect = </Root/ProximityMaterial/RippleGeometry/Divide.outputs:out>
+                float inputs:in3.connect = </Root/ProximityMaterial/RippleGeometry/Divide.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-665.3203, -162.39453)
+                float2 ui:nodegraph:node:size = (145, 54)
+                int ui:nodegraph:node:stackingOrder = 888
+            }
+
+            def Shader "Add"
+            {
+                uniform token info:id = "ND_add_vector3"
+                float3 inputs:in1.connect = </Root/ProximityMaterial/RippleGeometry/Combine3.outputs:out>
+                float3 inputs:in2.connect = </Root/ProximityMaterial/RippleGeometry/Position.outputs:out>
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-491.1328, -73.44531)
+                float2 ui:nodegraph:node:size = (61.5, 36.5)
+                int ui:nodegraph:node:stackingOrder = 888
+            }
+        }
+
+        def Shader "GeometryModifier"
+        {
+            uniform token info:id = "ND_realitykit_geometrymodifier_vertexshader"
+            color4f inputs:color
+            float3 inputs:modelPositionOffset.connect = </Root/ProximityMaterial/Multiply.outputs:out>
+            float3 inputs:normal
+            half2 inputs:userAttributeHalf2_0
+            half2 inputs:userAttributeHalf2_1
+            half4 inputs:userAttributeHalf4_2
+            half4 inputs:userAttributeHalf4_3
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (255.17892, 334.54022)
+            float2 ui:nodegraph:node:size = (196.5, 325)
+            int ui:nodegraph:node:stackingOrder = 1551
+        }
+
+        def NodeGraph "ProximityColor"
+        {
+            reorder nameChildren = ["Subtract_3", "Subtract_1", "Position", "Subtract_2", "Divide_1", "CameraPosition", "Subtract", "Distance3", "Switch", "ColorRangeMap", "ColorRangeMap_5", "Constant_6", "Constant_1", "Constant", "ColorRangeMap_6", "Constant_2", "ColorRangeMap_7", "ColorRangeMap_8", "Constant_3", "Constant_4", "ColorRangeMap_1"]
+            color4f outputs:Color (
+                customData = {
+                    dictionary realitykit = {
+                        int stackingOrderInSubgraph = 1198
+                    }
+                }
+            )
+            color4f outputs:Color.connect = </Root/ProximityMaterial/ProximityColor/Switch.outputs:out>
+            float2 ui:nodegraph:node:pos = (-590.50323, 24.886173)
+            float2 ui:nodegraph:node:size = (143.5, 81)
+            int ui:nodegraph:node:stackingOrder = 1992
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:ProximityColor"]
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (249.29797, 73.433716)
+            float2 ui:nodegraph:realitykit:subgraphOutputs:size = (172.15259, 81)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1203
+
+            def Shader "Subtract_3"
+            {
+                uniform token info:id = "ND_subtract_float"
+                float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3.outputs:Distance>
+                float inputs:in2 = 5
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-434.1914, 522.66595)
+                float2 ui:nodegraph:node:size = (61.5, 36)
+                int ui:nodegraph:node:stackingOrder = 1295
+            }
+
+            def Shader "Subtract_1"
+            {
+                uniform token info:id = "ND_subtract_float"
+                float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3.outputs:Distance>
+                float inputs:in2 = 3
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-328.67188, 176.45312)
+                float2 ui:nodegraph:node:size = (61.5, 36)
+                int ui:nodegraph:node:stackingOrder = 1293
+            }
+
+            def Shader "Position"
+            {
+                uniform token info:id = "ND_position_vector3"
+                string inputs:space = "world"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-922.41406, 36.828125)
+                float2 ui:nodegraph:node:size = (133.5, 40)
+                int ui:nodegraph:node:stackingOrder = 1192
+            }
+
+            def Shader "Subtract_2"
+            {
+                uniform token info:id = "ND_subtract_float"
+                float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3.outputs:Distance>
+                float inputs:in2 = 4
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-327.58203, 348.41986)
+                float2 ui:nodegraph:node:size = (61.5, 36)
+                int ui:nodegraph:node:stackingOrder = 1294
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in1"]
+            }
+
+            def Shader "Divide_1"
+            {
+                uniform token info:id = "ND_divide_float"
+                float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Subtract_3.outputs:out>
+                float inputs:in2 = 1
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-355.7422, 522.3203)
+                float2 ui:nodegraph:node:size = (61.5, 36)
+                int ui:nodegraph:node:stackingOrder = 1296
+            }
+
+            def Shader "CameraPosition"
+            {
+                uniform token info:id = "ND_realitykit_cameraposition_vector3"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-905.1172, -71.78516)
+                float2 ui:nodegraph:node:size = (218.5, 53)
+                int ui:nodegraph:node:stackingOrder = 1192
+            }
+
+            def Shader "Subtract"
+            {
+                uniform token info:id = "ND_subtract_float"
+                float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3.outputs:Distance>
+                float inputs:in2 = 2
+                float outputs:out
+                float2 ui:nodegraph:node:pos = (-329.04688, 2.9960938)
+                float2 ui:nodegraph:node:size = (61.5, 36)
+                int ui:nodegraph:node:stackingOrder = 1308
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:out"]
+            }
+
+            def NodeGraph "Distance3"
+            {
+                reorder nameChildren = ["RippleGeometry", "Factor", "Sqrt", "Add", "Add_1", "Factor_1", "Factor_2", "Separate3", "Separate3_1"]
+                float3 inputs:A = (0, 0, 0) (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-391.97266, -47.42578)
+                            float2 sizeInSubgraph = (139, 53)
+                            int stackingOrderInSubgraph = 34
+                        }
+                    }
+                )
+                float3 inputs:A.connect = </Root/ProximityMaterial/ProximityColor/CameraPosition.outputs:out>
+                float3 inputs:B = (0, 0, 0) (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-402.53125, 98.90234)
+                            float2 sizeInSubgraph = (139, 53)
+                            int stackingOrderInSubgraph = 41
+                        }
+                    }
+                )
+                float3 inputs:B.connect = </Root/ProximityMaterial/ProximityColor/Position.outputs:out>
+                float outputs:Distance (
+                    customData = {
+                        dictionary realitykit = {
+                            int stackingOrderInSubgraph = 0
+                        }
+                    }
+                )
+                float outputs:Distance.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Sqrt.outputs:out>
+                float2 ui:nodegraph:node:pos = (-677.3867, -49.347656)
+                float2 ui:nodegraph:node:size = (115, 127)
+                int ui:nodegraph:node:stackingOrder = 1192
+                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (436.54688, 47.246094)
+                float2 ui:nodegraph:realitykit:subgraphOutputs:size = (141.5, 81)
+                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 26
+
+                def NodeGraph "Factor"
+                {
+                    float inputs:A = 0 (
+                        customData = {
+                            dictionary realitykit = {
+                                float2 positionInSubgraph = (-502.35938, 77.85156)
+                                float2 sizeInSubgraph = (98, 53)
+                                int stackingOrderInSubgraph = 13
+                            }
+                        }
+                    )
+                    float inputs:A.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Separate3.outputs:outx>
+                    float inputs:B = 0 (
+                        customData = {
+                            dictionary realitykit = {
+                                float2 positionInSubgraph = (-499.97266, 151.96875)
+                                float2 sizeInSubgraph = (98, 53)
+                                int stackingOrderInSubgraph = 17
+                            }
+                        }
+                    )
+                    float inputs:B.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Separate3_1.outputs:outx>
+                    float outputs:Factor (
+                        customData = {
+                            dictionary realitykit = {
+                                int stackingOrderInSubgraph = 0
+                            }
+                        }
+                    )
+                    float outputs:Factor.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor/Power.outputs:out>
+                    float2 ui:nodegraph:node:pos = (-51.921875, -27.351562)
+                    float2 ui:nodegraph:node:size = (105.5, 127)
+                    int ui:nodegraph:node:stackingOrder = 40
+                    float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (0, 86.5)
+                    float2 ui:nodegraph:realitykit:subgraphOutputs:size = (130, 81)
+                    int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 12
+
+                    def Shader "Power"
+                    {
+                        uniform token info:id = "ND_power_float"
+                        float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor/Subtract.outputs:out>
+                        float inputs:in2 = 2
+                        float outputs:out
+                        float2 ui:nodegraph:node:pos = (-191.96875, 112.41406)
+                        float2 ui:nodegraph:node:size = (123.5, 40)
+                        int ui:nodegraph:node:stackingOrder = 5
+                        string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in2"]
+                    }
+
+                    def Shader "Subtract"
+                    {
+                        uniform token info:id = "ND_subtract_float"
+                        float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor.inputs:A>
+                        float inputs:in2.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor.inputs:B>
+                        float outputs:out
+                        float2 ui:nodegraph:node:pos = (-346.79688, 101.63281)
+                        float2 ui:nodegraph:node:size = (61.5, 36)
+                        int ui:nodegraph:node:stackingOrder = 11
+                    }
+                }
+
+                def Shader "Sqrt"
+                {
+                    uniform token info:id = "ND_sqrt_float"
+                    float inputs:in.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Add.outputs:out>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (243.58984, 73.6875)
+                    float2 ui:nodegraph:node:size = (143.5, 53)
+                    int ui:nodegraph:node:stackingOrder = 9
+                }
+
+                def Shader "Add"
+                {
+                    uniform token info:id = "ND_add_float"
+                    float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor.outputs:Factor>
+                    float inputs:in2.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Add_1.outputs:out>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (108.91406, 70.13672)
+                    float2 ui:nodegraph:node:size = (61.5, 36.5)
+                    int ui:nodegraph:node:stackingOrder = 12
+                }
+
+                def Shader "Add_1"
+                {
+                    uniform token info:id = "ND_add_float"
+                    float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_1.outputs:Factor>
+                    float inputs:in2.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_2.outputs:Factor>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (112.26953, 135.13672)
+                    float2 ui:nodegraph:node:size = (61.5, 36.5)
+                    int ui:nodegraph:node:stackingOrder = 15
+                }
+
+                def NodeGraph "Factor_1"
+                {
+                    float inputs:A = 0 (
+                        customData = {
+                            dictionary realitykit = {
+                                float2 positionInSubgraph = (-502.35938, 77.85156)
+                                float2 sizeInSubgraph = (98, 53)
+                                int stackingOrderInSubgraph = 13
+                            }
+                        }
+                    )
+                    float inputs:A.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Separate3.outputs:outy>
+                    float inputs:B = 0 (
+                        customData = {
+                            dictionary realitykit = {
+                                float2 positionInSubgraph = (-499.97266, 151.96875)
+                                float2 sizeInSubgraph = (98, 53)
+                                int stackingOrderInSubgraph = 17
+                            }
+                        }
+                    )
+                    float inputs:B.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Separate3_1.outputs:outy>
+                    float outputs:Factor (
+                        customData = {
+                            dictionary realitykit = {
+                                int stackingOrderInSubgraph = 0
+                            }
+                        }
+                    )
+                    float outputs:Factor.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_1/Power.outputs:out>
+                    float2 ui:nodegraph:node:pos = (-53.171875, 115.19531)
+                    float2 ui:nodegraph:node:size = (105.5, 127)
+                    int ui:nodegraph:node:stackingOrder = 21
+                    float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (0, 86.5)
+                    float2 ui:nodegraph:realitykit:subgraphOutputs:size = (130, 81)
+                    int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 12
+
+                    def Shader "Power"
+                    {
+                        uniform token info:id = "ND_power_float"
+                        float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_1/Subtract.outputs:out>
+                        float inputs:in2 = 2
+                        float outputs:out
+                        float2 ui:nodegraph:node:pos = (-191.96875, 112.41406)
+                        float2 ui:nodegraph:node:size = (123.5, 40)
+                        int ui:nodegraph:node:stackingOrder = 5
+                        string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in2"]
+                    }
+
+                    def Shader "Subtract"
+                    {
+                        uniform token info:id = "ND_subtract_float"
+                        float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_1.inputs:A>
+                        float inputs:in2.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_1.inputs:B>
+                        float outputs:out
+                        float2 ui:nodegraph:node:pos = (-346.79688, 101.63281)
+                        float2 ui:nodegraph:node:size = (61.5, 36)
+                        int ui:nodegraph:node:stackingOrder = 11
+                    }
+                }
+
+                def NodeGraph "Factor_2"
+                {
+                    float inputs:A = 0 (
+                        customData = {
+                            dictionary realitykit = {
+                                float2 positionInSubgraph = (-502.35938, 77.85156)
+                                float2 sizeInSubgraph = (98, 53)
+                                int stackingOrderInSubgraph = 13
+                            }
+                        }
+                    )
+                    float inputs:A.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Separate3.outputs:outz>
+                    float inputs:B = 0 (
+                        customData = {
+                            dictionary realitykit = {
+                                float2 positionInSubgraph = (-499.97266, 151.96875)
+                                float2 sizeInSubgraph = (98, 53)
+                                int stackingOrderInSubgraph = 17
+                            }
+                        }
+                    )
+                    float inputs:B.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Separate3_1.outputs:outz>
+                    float outputs:Factor (
+                        customData = {
+                            dictionary realitykit = {
+                                int stackingOrderInSubgraph = 0
+                            }
+                        }
+                    )
+                    float outputs:Factor.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_2/Power.outputs:out>
+                    float2 ui:nodegraph:node:pos = (-53.23047, 255.32031)
+                    float2 ui:nodegraph:node:size = (107, 127)
+                    int ui:nodegraph:node:stackingOrder = 25
+                    float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (0, 86.5)
+                    float2 ui:nodegraph:realitykit:subgraphOutputs:size = (130, 81)
+                    int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 12
+
+                    def Shader "Power"
+                    {
+                        uniform token info:id = "ND_power_float"
+                        float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_2/Subtract.outputs:out>
+                        float inputs:in2 = 2
+                        float outputs:out
+                        float2 ui:nodegraph:node:pos = (-191.96875, 112.41406)
+                        float2 ui:nodegraph:node:size = (123.5, 40)
+                        int ui:nodegraph:node:stackingOrder = 5
+                        string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:in2"]
+                    }
+
+                    def Shader "Subtract"
+                    {
+                        uniform token info:id = "ND_subtract_float"
+                        float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_2.inputs:A>
+                        float inputs:in2.connect = </Root/ProximityMaterial/ProximityColor/Distance3/Factor_2.inputs:B>
+                        float outputs:out
+                        float2 ui:nodegraph:node:pos = (-346.79688, 101.63281)
+                        float2 ui:nodegraph:node:size = (61.5, 36)
+                        int ui:nodegraph:node:stackingOrder = 11
+                    }
+                }
+
+                def Shader "Separate3"
+                {
+                    uniform token info:id = "ND_separate3_vector3"
+                    float3 inputs:in.connect = </Root/ProximityMaterial/ProximityColor/Distance3.inputs:A>
+                    float outputs:outx
+                    float outputs:outy
+                    float outputs:outz
+                    float2 ui:nodegraph:node:pos = (-219.08984, -41.839844)
+                    float2 ui:nodegraph:node:size = (115.5, 145)
+                    int ui:nodegraph:node:stackingOrder = 32
+                }
+
+                def Shader "Separate3_1"
+                {
+                    uniform token info:id = "ND_separate3_vector3"
+                    float3 inputs:in.connect = </Root/ProximityMaterial/ProximityColor/Distance3.inputs:B>
+                    float outputs:outx
+                    float outputs:outy
+                    float outputs:outz
+                    float2 ui:nodegraph:node:pos = (-220.71484, 109.68359)
+                    float2 ui:nodegraph:node:size = (127.5, 145)
+                    int ui:nodegraph:node:stackingOrder = 39
+                }
+            }
+
+            def Shader "Switch"
+            {
+                uniform token info:id = "ND_switch_color4"
+                color4f inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.outputs:Color>
+                color4f inputs:in2.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.outputs:Color>
+                color4f inputs:in3.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap_5.outputs:Color>
+                color4f inputs:in4.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap_6.outputs:Color>
+                color4f inputs:in5.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap_7.outputs:Color>
+                color4f inputs:in6.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap_8.outputs:Color>
+                color4f inputs:in7.connect = None
+                color4f inputs:in8.connect = None
+                color4f inputs:in9.connect = None
+                color4f inputs:in10.connect = None
+                prepend float inputs:which.connect = </Root/ProximityMaterial/ProximityColor/Distance3.outputs:Distance>
+                color4f outputs:out
+                float2 ui:nodegraph:node:pos = (57.289497, -24.099133)
+                float2 ui:nodegraph:node:size = (94, 289)
+                int ui:nodegraph:node:stackingOrder = 1280
+            }
+
+            def NodeGraph "ColorRangeMap"
+            {
+                color4f inputs:ColorHigh = (0, 0, 0, 0) (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-767.2435, 18.66836)
+                            float2 sizeInSubgraph = (133, 53)
+                            int stackingOrderInSubgraph = 790
+                        }
+                    }
+                )
+                color4f inputs:ColorHigh.connect = </Root/ProximityMaterial/ProximityColor/Constant_1.outputs:out>
+                color4f inputs:ColorLow = (0, 0, 0, 0) (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-754.0742, -139.6211)
+                            float2 sizeInSubgraph = (133, 53)
+                            int stackingOrderInSubgraph = 768
+                        }
+                    }
+                )
+                color4f inputs:ColorLow.connect = </Root/ProximityMaterial/ProximityColor/Constant_6.outputs:out>
+                float inputs:Distance = 0 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-762.96094, -261.42578)
+                            float2 sizeInSubgraph = (122.5, 53)
+                            int stackingOrderInSubgraph = 764
+                        }
+                    }
+                )
+                float inputs:Distance.connect = </Root/ProximityMaterial/ProximityColor/Distance3.outputs:Distance>
+                float inputs:Max = 2 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-764.8828, 153.64453)
+                            float2 sizeInSubgraph = (98, 53)
+                            int stackingOrderInSubgraph = 768
+                        }
+                    }
+                )
+                color4f outputs:Color (
+                    customData = {
+                        dictionary realitykit = {
+                            int stackingOrderInSubgraph = 768
+                        }
+                    }
+                )
+                color4f outputs:Color.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Combine4.outputs:out>
+                float2 ui:nodegraph:node:pos = (-206.27344, -184.10547)
+                float2 ui:nodegraph:node:size = (151.5, 163)
+                int ui:nodegraph:node:stackingOrder = 1312
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:ColorLow"]
+                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (125.30469, 94.09375)
+                float2 ui:nodegraph:realitykit:subgraphOutputs:size = (172.06248, 81)
+                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 639
+
+                def Shader "Range"
+                {
+                    uniform token info:id = "ND_range_float"
+                    bool inputs:doclamp = 0
+                    float inputs:gamma
+                    float inputs:in.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Distance>
+                    float inputs:inhigh = 1
+                    float inputs:inhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Max>
+                    float inputs:inlow.connect = None
+                    float inputs:outhigh = 0
+                    float inputs:outhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4_1.outputs:outr>
+                    float inputs:outlow = 1
+                    float inputs:outlow.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4.outputs:outr>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-305.70312, -63.26953)
+                    float2 ui:nodegraph:node:size = (98, 217)
+                    int ui:nodegraph:node:stackingOrder = 797
+                    string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:gamma", "inputs:outlow", "inputs:inlow"]
+                }
+
+                def Shader "Range_1"
+                {
+                    uniform token info:id = "ND_range_float"
+                    bool inputs:doclamp = 0
+                    float inputs:gamma
+                    float inputs:in.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Distance>
+                    float inputs:inhigh = 1
+                    float inputs:inhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Max>
+                    float inputs:inlow.connect = None
+                    float inputs:outhigh = 0
+                    float inputs:outhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4_1.outputs:outg>
+                    float inputs:outlow = 1
+                    float inputs:outlow.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4.outputs:outg>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-301.3047, 167.27344)
+                    float2 ui:nodegraph:node:size = (103.5, 217)
+                    int ui:nodegraph:node:stackingOrder = 786
+                    string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:gamma"]
+                }
+
+                def Shader "Range_2"
+                {
+                    uniform token info:id = "ND_range_float"
+                    bool inputs:doclamp = 0
+                    float inputs:gamma
+                    float inputs:in.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Distance>
+                    float inputs:inhigh = 1
+                    float inputs:inhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Max>
+                    float inputs:inlow.connect = None
+                    float inputs:outhigh = 0
+                    float inputs:outhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4_1.outputs:outb>
+                    float inputs:outlow = 1
+                    float inputs:outlow.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4.outputs:outb>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-299.98438, 396.9375)
+                    float2 ui:nodegraph:node:size = (107, 217)
+                    int ui:nodegraph:node:stackingOrder = 787
+                    string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:gamma", "inputs:gamma"]
+                }
+
+                def Shader "Range_3"
+                {
+                    uniform token info:id = "ND_range_float"
+                    bool inputs:doclamp = 0
+                    float inputs:gamma
+                    float inputs:in.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Distance>
+                    float inputs:inhigh = 1
+                    float inputs:inhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:Max>
+                    float inputs:inlow.connect = None
+                    float inputs:outhigh = 0
+                    float inputs:outhigh.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4_1.outputs:outa>
+                    float inputs:outlow = 1
+                    float inputs:outlow.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Separate4.outputs:outa>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-302.90234, 633.28516)
+                    float2 ui:nodegraph:node:size = (106.5, 217)
+                    int ui:nodegraph:node:stackingOrder = 798
+                    string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:gamma"]
+                }
+
+                def Shader "Separate4"
+                {
+                    uniform token info:id = "ND_separate4_color4"
+                    color4f inputs:in.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:ColorLow>
+                    float outputs:outa
+                    float outputs:outb
+                    float outputs:outg
+                    float outputs:outr
+                    float2 ui:nodegraph:node:pos = (-511.57812, -126.71875)
+                    float2 ui:nodegraph:node:size = (115.5, 163)
+                    int ui:nodegraph:node:stackingOrder = 795
+                }
+
+                def Shader "Combine4"
+                {
+                    uniform token info:id = "ND_combine4_color4"
+                    float inputs:in1.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Range.outputs:out>
+                    float inputs:in2.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Range_1.outputs:out>
+                    float inputs:in3.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Range_2.outputs:out>
+                    float inputs:in4.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap/Range_3.outputs:out>
+                    color4f outputs:out
+                    float2 ui:nodegraph:node:pos = (-96.72331, 125.23912)
+                    float2 ui:nodegraph:node:size = (145, 72)
+                    int ui:nodegraph:node:stackingOrder = 783
+                }
+
+                def Shader "Separate4_1"
+                {
+                    uniform token info:id = "ND_separate4_color4"
+                    color4f inputs:in.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap.inputs:ColorHigh>
+                    float outputs:outa
+                    float outputs:outb
+                    float outputs:outg
+                    float outputs:outr
+                    float2 ui:nodegraph:node:pos = (-515.7037, 51.315037)
+                    float2 ui:nodegraph:node:size = (128, 163)
+                    int ui:nodegraph:node:stackingOrder = 793
+                }
+            }
+
+            def "ColorRangeMap_5" (
+                active = true
+                instanceable = true
+                references = </Root/ProximityMaterial/ProximityColor/ColorRangeMap>
+            )
+            {
+                color4f inputs:ColorHigh.connect = </Root/ProximityMaterial/ProximityColor/Constant.outputs:out>
+                color4f inputs:ColorLow.connect = </Root/ProximityMaterial/ProximityColor/Constant_1.outputs:out>
+                float inputs:Distance.connect = </Root/ProximityMaterial/ProximityColor/Subtract.outputs:out>
+                float inputs:Max = 1
+                float2 ui:nodegraph:node:pos = (-201.51582, -14.99026)
+                float2 ui:nodegraph:node:size = (164.5, 163)
+                int ui:nodegraph:node:stackingOrder = 1313
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:ColorLow", "inputs:ColorHigh"]
+            }
+
+            def Shader "Constant_6"
+            {
+                uniform token info:id = "ND_constant_color4"
+                color4f inputs:value = (0.9969724, 0.9330774, 0, 1) (
+                    colorSpace = "srgb_displayp3"
+                )
+                color4f outputs:out
+                float2 ui:nodegraph:node:pos = (-448.5853, -267.5576)
+                float2 ui:nodegraph:node:size = (158, 53)
+                int ui:nodegraph:node:stackingOrder = 1299
+            }
+
+            def Shader "Constant_1"
+            {
+                uniform token info:id = "ND_constant_color4"
+                color4f inputs:value = (0, 0.986136, 0.009519941, 1) (
+                    colorSpace = "srgb_displayp3"
+                )
+                color4f outputs:out
+                float2 ui:nodegraph:node:pos = (-448.0875, -194.24545)
+                float2 ui:nodegraph:node:size = (155, 53)
+                int ui:nodegraph:node:stackingOrder = 1310
+            }
+
+            def Shader "Constant"
+            {
+                uniform token info:id = "ND_constant_color4"
+                color4f inputs:value = (0, 0.99140567, 0.99140567, 1) (
+                    colorSpace = "srgb_displayp3"
+                )
+                color4f outputs:out
+                float2 ui:nodegraph:node:pos = (-471.30768, -37.660095)
+                float2 ui:nodegraph:node:size = (151, 53)
+                int ui:nodegraph:node:stackingOrder = 1311
+            }
+
+            def "ColorRangeMap_6" (
+                active = true
+                instanceable = true
+                references = </Root/ProximityMaterial/ProximityColor/ColorRangeMap>
+            )
+            {
+                color4f inputs:ColorHigh.connect = </Root/ProximityMaterial/ProximityColor/Constant_2.outputs:out>
+                color4f inputs:ColorLow.connect = </Root/ProximityMaterial/ProximityColor/Constant.outputs:out>
+                float inputs:Distance.connect = </Root/ProximityMaterial/ProximityColor/Subtract_1.outputs:out>
+                float inputs:Max = 1
+                color4f outputs:Color.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap_6/Combine4.outputs:out>
+                float2 ui:nodegraph:node:pos = (-206.52437, 156.23845)
+                float2 ui:nodegraph:node:size = (164.5, 163)
+                int ui:nodegraph:node:stackingOrder = 1314
+            }
+
+            def Shader "Constant_2"
+            {
+                uniform token info:id = "ND_constant_color4"
+                color4f inputs:value = (0, 0.06408901, 1, 1) (
+                    colorSpace = "srgb_displayp3"
+                )
+                color4f outputs:out
+                float2 ui:nodegraph:node:pos = (-468.13742, 125.78735)
+                float2 ui:nodegraph:node:size = (158.5, 53)
+                int ui:nodegraph:node:stackingOrder = 1284
+            }
+
+            def "ColorRangeMap_7" (
+                active = true
+                instanceable = true
+                references = </Root/ProximityMaterial/ProximityColor/ColorRangeMap>
+            )
+            {
+                color4f inputs:ColorHigh.connect = </Root/ProximityMaterial/ProximityColor/Constant_3.outputs:out>
+                color4f inputs:ColorLow.connect = </Root/ProximityMaterial/ProximityColor/Constant_2.outputs:out>
+                float inputs:Distance.connect = </Root/ProximityMaterial/ProximityColor/Subtract_2.outputs:out>
+                float inputs:Max = 1
+                color4f outputs:Color.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap_7/Combine4.outputs:out>
+                float2 ui:nodegraph:node:pos = (-207.54591, 328.61108)
+                float2 ui:nodegraph:node:size = (164.5, 163)
+                int ui:nodegraph:node:stackingOrder = 1315
+            }
+
+            def "ColorRangeMap_8" (
+                active = true
+                instanceable = true
+                references = </Root/ProximityMaterial/ProximityColor/ColorRangeMap>
+            )
+            {
+                color4f inputs:ColorHigh.connect = </Root/ProximityMaterial/ProximityColor/Constant_4.outputs:out>
+                color4f inputs:ColorLow.connect = </Root/ProximityMaterial/ProximityColor/Constant_3.outputs:out>
+                float inputs:Distance.connect = </Root/ProximityMaterial/ProximityColor/Divide_1.outputs:out>
+                float inputs:Max = 1
+                color4f outputs:Color.connect = </Root/ProximityMaterial/ProximityColor/ColorRangeMap_8/Combine4.outputs:out>
+                float2 ui:nodegraph:node:pos = (-210.5565, 508.1605)
+                float2 ui:nodegraph:node:size = (164.5, 163)
+                int ui:nodegraph:node:stackingOrder = 1316
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:ColorLow", "inputs:ColorHigh"]
+            }
+
+            def Shader "Constant_3"
+            {
+                uniform token info:id = "ND_constant_color4"
+                color4f inputs:value = (0.96927875, 0, 0.939757, 1) (
+                    colorSpace = "srgb_displayp3"
+                )
+                color4f outputs:out
+                float2 ui:nodegraph:node:pos = (-465.01672, 290.99692)
+                float2 ui:nodegraph:node:size = (158, 53)
+                int ui:nodegraph:node:stackingOrder = 1283
+            }
+
+            def Shader "Constant_4"
+            {
+                uniform token info:id = "ND_constant_color4"
+                color4f inputs:value = (0, 0, 0, 0)
+                color4f outputs:out
+                float2 ui:nodegraph:node:pos = (-467.721, 455.41675)
+                float2 ui:nodegraph:node:size = (158, 53)
+                int ui:nodegraph:node:stackingOrder = 1297
+            }
+        }
+
+        def Shader "Convert"
+        {
+            uniform token info:id = "ND_convert_boolean_float"
+            bool inputs:in.connect = </Root/ProximityMaterial.inputs:Ripple>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-217.64911, 168.08627)
+            float2 ui:nodegraph:node:size = (135.5, 40)
+            int ui:nodegraph:node:stackingOrder = 1879
+        }
+
+        def Shader "Combine3"
+        {
+            uniform token info:id = "ND_combine3_vector3"
+            float inputs:in1.connect = </Root/ProximityMaterial/Convert.outputs:out>
+            float inputs:in2.connect = </Root/ProximityMaterial/Convert.outputs:out>
+            float inputs:in3.connect = </Root/ProximityMaterial/Convert.outputs:out>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (-47.42163, 168.6167)
+            float2 ui:nodegraph:node:size = (145, 54)
+            int ui:nodegraph:node:stackingOrder = 1714
+        }
+
+        def Shader "Multiply"
+        {
+            uniform token info:id = "ND_multiply_vector3"
+            float3 inputs:in1.connect = </Root/ProximityMaterial/Combine3.outputs:out>
+            float3 inputs:in2.connect = </Root/ProximityMaterial/RippleGeometry.outputs:PositionOffset>
+            float3 outputs:out
+            float2 ui:nodegraph:node:pos = (92.58984, 237.8164)
+            float2 ui:nodegraph:node:size = (60, 36)
+            int ui:nodegraph:node:stackingOrder = 1714
+        }
+
+        def Shader "Separate4"
+        {
+            uniform token info:id = "ND_separate4_color4"
+            color4f inputs:in.connect = </Root/ProximityMaterial/ColorRangeMap_1.outputs:Color>
+            float outputs:outa
+            float outputs:outb
+            float outputs:outg
+            float outputs:outr
+            float2 ui:nodegraph:node:pos = (-122.33597, 16.266304)
+            float2 ui:nodegraph:node:size = (115.5, 163)
+            int ui:nodegraph:node:stackingOrder = 1896
+        }
+
+        def Shader "Combine3_1"
+        {
+            uniform token info:id = "ND_combine3_color3"
+            float inputs:in1.connect = </Root/ProximityMaterial/Separate4.outputs:outr>
+            float inputs:in2.connect = </Root/ProximityMaterial/Separate4.outputs:outg>
+            float inputs:in3.connect = </Root/ProximityMaterial/Separate4.outputs:outb>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (93.81181, 21.867226)
+            float2 ui:nodegraph:node:size = (157, 54)
+            int ui:nodegraph:node:stackingOrder = 1896
+        }
+
+        def Shader "Convert_1"
+        {
+            uniform token info:id = "ND_convert_boolean_float"
+            bool inputs:in.connect = </Root/ProximityMaterial.inputs:UseCustomColor>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-614.68726, -82.329704)
+            float2 ui:nodegraph:node:size = (148, 53)
+            int ui:nodegraph:node:stackingOrder = 1983
+        }
+
+        def "ColorRangeMap_1" (
+            active = true
+            instanceable = true
+            references = </Root/ProximityMaterial/ProximityColor/ColorRangeMap>
+        )
+        {
+            color4f inputs:ColorHigh.connect = </Root/ProximityMaterial.inputs:CustomColor>
+            color4f inputs:ColorLow.connect = </Root/ProximityMaterial/ProximityColor.outputs:Color>
+            float inputs:Distance.connect = </Root/ProximityMaterial/Convert_1.outputs:out>
+            float inputs:Max = 1
+            float2 ui:nodegraph:node:pos = (-332.75012, -65.17794)
+            float2 ui:nodegraph:node:size = (161.5, 163)
+            int ui:nodegraph:node:stackingOrder = 1991
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:ColorLow", "inputs:ColorHigh"]
+        }
+    }
+
+    def Cube "TestPlane" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/ProximityMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double size = 0.2
+        float3 xformOp:scale = (10, 10, 1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def Material "DefaultMaterial"
+        {
+            prepend token outputs:surface.connect = </Root/TestPlane/DefaultMaterial/DefaultSurfaceShader.outputs:surface>
+
+            def Shader "DefaultSurfaceShader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (1, 1, 1)
+                float inputs:roughness = 0.75
+                token outputs:surface
+            }
+        }
+    }
+}
+

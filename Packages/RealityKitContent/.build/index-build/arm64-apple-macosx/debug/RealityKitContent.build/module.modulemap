@@ -1,0 +1,4 @@
+module RealityKitContent {
+    header "/Users/darrenlam/Project/eyesonyou_proto/Packages/RealityKitContent/.build/index-build/arm64-apple-macosx/debug/RealityKitContent.build/RealityKitContent-Swift.h"
+    requires objc
+}

@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/darrenlam/Project/eyesonyou_proto/Packages/RealityKitContent/.build/index-build/arm64-apple-macosx/debug/RealityKitContent.build/master.swiftdeps"
+  },
+  "/Users/darrenlam/Project/eyesonyou_proto/Packages/RealityKitContent/Sources/RealityKitContent/RealityKitContent.swift": {
+    "dependencies": "/Users/darrenlam/Project/eyesonyou_proto/Packages/RealityKitContent/.build/index-build/arm64-apple-macosx/debug/RealityKitContent.build/RealityKitContent.d",
+    "object": "/Users/darrenlam/Project/eyesonyou_proto/Packages/RealityKitContent/.build/index-build/arm64-apple-macosx/debug/RealityKitContent.build/RealityKitContent.swift.o",
+    "swiftmodule": "/Users/darrenlam/Project/eyesonyou_proto/Packages/RealityKitContent/.build/index-build/arm64-apple-macosx/debug/RealityKitContent.build/RealityKitContent~partial.swiftmodule",
+    "swift-dependencies": "/Users/darrenlam/Project/eyesonyou_proto/Packages/RealityKitContent/.build/index-build/arm64-apple-macosx/debug/RealityKitContent.build/RealityKitContent.swiftdeps"
+  }
+}
